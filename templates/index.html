@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Suhu Cuaca</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f5f7fa;
+        }
+        .card {
+            border-radius: 1rem;
+        }
+        h1, h2, h3 {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function validateFile() {
+            var fileInput = document.getElementById("dataset");
+            var filePath = fileInput.value;
+            var allowedExtensions = /(\.csv)$/i;
+            if (!allowedExtensions.exec(filePath)) {
+                alert("Hanya file CSV yang diperbolehkan!");
+                fileInput.value = "";
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body class="container py-5">
+    <h1 class="text-center mb-5">🌤️ Prediksi Suhu Berdasarkan Data Historis</h1>
+
+    {% if error %}
+        <div class="alert alert-danger text-center">{{ error }}</div>
+    {% endif %}
+
+    <!-- Upload Dataset -->
+    <div class="card shadow-sm mb-4 p-4">
+        <h3 class="card-title mb-3">📂 Unggah Dataset CSV</h3>
+        <form method="POST" enctype="multipart/form-data" onsubmit="return validateFile()">
+            <input type="file" name="dataset" id="dataset" class="form-control mb-3" required>
+            <button type="submit" class="btn btn-success w-100">📥 Unggah & Prediksi</button>
+        </form>
+    </div>
+
+    <!-- Input Manual -->
+    <div class="card shadow-sm mb-4 p-4">
+        <h3 class="card-title mb-3">📝 Input Data Manual</h3>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="curah_hujan" class="form-label">🌧️ Curah Hujan (mm):</label>
+                <input type="number" step="0.01" name="curah_hujan" class="form-control" min="0" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="kelembaban" class="form-label">💧 Kelembaban (%):</label>
+                <input type="number" step="0.01" name="kelembaban" class="form-control" min="0" max="100" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="kecepatan_angin" class="form-label">🌬️ Kecepatan Angin (km/h):</label>
+                <input type="number" step="0.01" name="kecepatan_angin" class="form-control" min="0" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">🔍 Prediksi</button>
+        </form>
+
+        {% if prediction %}
+            <div class="alert alert-success mt-3 text-center">
+                <strong>Prediksi Suhu:</strong> {{ prediction }}°C
+            </div>
+        {% endif %}
+    </div>
+
+    {% if tables %}
+        <div class="card shadow-sm mb-4 p-4">
+            <h2 class="text-center mb-3">📈 Hasil Prediksi</h2>
+            <div class="table-responsive">
+                {{ tables|safe }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if graph %}
+        <div class="card shadow-sm p-4">
+            <h3 class="text-center mb-3">📊 Grafik Prediksi Suhu</h3>
+            <div class="text-center">
+                <img src="{{ graph }}" class="img-fluid rounded shadow-sm" alt="Grafik Prediksi">
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>
