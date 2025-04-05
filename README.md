@@ -2,7 +2,7 @@
 
 Nama: Purnamasari Siregar
 
-Kelas 3A
+Kelas: 3A
 
 Nim: 301230049
 
